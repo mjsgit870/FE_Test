@@ -1,5 +1,5 @@
-export default function LoginPage() {
-  return (
-    <div>page</div>
-  )
+import LoginPage from "@/features/login/routes/LoginPage";
+
+export default function Login() {
+  return <LoginPage />;
 }
