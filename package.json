@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss,md,json}'",
+    "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss,md,json}'"
   },
   "dependencies": {
     "@mantine/core": "^7.16.2",
@@ -35,6 +37,7 @@
     "postcss": "^8.5.1",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.4.2",
     "typescript": "^5"
   }
 }
