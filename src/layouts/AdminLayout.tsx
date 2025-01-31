@@ -1,28 +1,14 @@
 "use client"
 
 import SidebarLinks from "@/layouts/SidebarLinks"
-import {
-  ActionIcon,
-  AppShell,
-  Avatar,
-  Box,
-  Divider,
-  Image,
-  Menu,
-  ScrollArea,
-} from "@mantine/core"
+import { ActionIcon, AppShell, Avatar, Box, Divider, Image, Menu, ScrollArea } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { IconMenu2 } from "@tabler/icons-react"
 import { usePathname } from "next/navigation"
 import { useEffect } from "react"
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
-    useDisclosure()
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure()
 
   const pathname = usePathname()
 
@@ -49,12 +35,7 @@ export default function AdminLayout({
         px="md"
       >
         <AppShell.Section style={{ display: "flex", alignItems: "center" }}>
-          <ActionIcon
-            variant="filled"
-            color="gray"
-            hiddenFrom="sm"
-            onClick={toggleMobile}
-          >
+          <ActionIcon variant="filled" color="gray" hiddenFrom="sm" onClick={toggleMobile}>
             <IconMenu2 stroke={1.5} />
           </ActionIcon>
 
@@ -69,10 +50,7 @@ export default function AdminLayout({
           <Divider orientation="vertical" mx="sm" />
 
           {/* links */}
-          <Box
-            style={{ display: "flex", alignItems: "center", gap: 4 }}
-            visibleFrom="sm"
-          >
+          <Box style={{ display: "flex", alignItems: "center", gap: 4 }} visibleFrom="sm">
             <SidebarLinks />
           </Box>
         </AppShell.Section>
