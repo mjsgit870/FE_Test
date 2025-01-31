@@ -1,20 +1,32 @@
-"use client"
+"use client";
 
-import SidebarLinks from "@/layouts/SidebarLinks"
-import { ActionIcon, AppShell, Avatar, Box, Divider, Image, Menu, ScrollArea } from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
-import { IconMenu2 } from "@tabler/icons-react"
-import { usePathname } from "next/navigation"
-import { useEffect } from "react"
+import { useLogout } from "@/hooks/useLogout";
+import SidebarLinks from "@/layouts/SidebarLinks";
+import { ActionIcon, AppShell, Avatar, Box, Divider, Image, Menu, ScrollArea } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconMenu2 } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure()
+  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure();
 
-  const pathname = usePathname()
+  const { logout } = useLogout();
+
+  const logoutHandler = () => {
+    toast.promise(logout, {
+      pending: "Wait a moment...",
+      success: "Logged out successfully",
+      error: "Failed to logout",
+    });
+  };
+
+  const pathname = usePathname();
 
   useEffect(() => {
-    closeMobile()
-  }, [pathname, closeMobile])
+    closeMobile();
+  }, [pathname, closeMobile]);
 
   return (
     <AppShell
@@ -65,8 +77,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Application</Menu.Label>
-              <Menu.Item color="red">Logout</Menu.Item>
+              <Menu.Label>Account</Menu.Label>
+              <Menu.Item color="red" onClick={logoutHandler}>
+                Logout
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </AppShell.Section>
@@ -92,5 +106,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
-  )
+  );
 }
