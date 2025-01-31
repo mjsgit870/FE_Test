@@ -28,7 +28,7 @@ export default function Map({ activeRuas, isLoading = false }: MapProps) {
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
       {/* loading ketika fetching api */}
-      {isLoading && <LoadingOverlay />}
+      {isLoading && <LoadingOverlay text="Mencari data ruas..." />}
 
       <MapContainer center={center} zoom={13} scrollWheelZoom={false} style={{ height: "calc(100vh - 60px)" }}>
         <TileLayer
@@ -53,6 +53,19 @@ export default function Map({ activeRuas, isLoading = false }: MapProps) {
             <Polyline
               positions={allPolylinePositions[ruasIndex]}
               // color={`hsl(${ruasIndex * 60}, 70%, 50%)`} // Different color for each route
+              weight={5}
+              eventHandlers={{
+                click: (e) => {
+                  const popup = L.popup().setLatLng(e.latlng).setContent(`
+                    <div>
+                      <h3 style="margin: 0 0 8px 0; font-size: 16px;">${ruas.ruas_name}</h3>
+                      <p style="margin: 0;">Panjang: ${ruas.long} KM</p>
+                      <p style="margin: 4px 0 0 0;">Koordinat: ${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}</p>
+                    </div>
+                  `);
+                  popup.openOn(e.target._map);
+                },
+              }}
             />
           </React.Fragment>
         ))}
