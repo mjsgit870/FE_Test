@@ -1,72 +1,61 @@
-import { useEffect } from "react";
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
+import React from "react";
+import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
+import { ActiveRuasResponse } from "../types";
+import SetBoundsComponent from "./SetBoundsComponent";
+import LoadingOverlay from "./LoadingOverlay";
 
-const coordinates = [
-  {
-    id: 1,
-    ruas_id: 1,
-    ordering: 0,
-    coordinates: "-6.307002,106.894675",
-    created_at: "2025-01-31T04:08:46.000000Z",
-    updated_at: "2025-01-31T04:08:46.000000Z",
-  },
-  {
-    id: 2,
-    ruas_id: 1,
-    ordering: 1,
-    coordinates: "-6.278520,106.959314",
-    created_at: "2025-01-31T04:08:46.000000Z",
-    updated_at: "2025-01-31T04:08:46.000000Z",
-  },
-  {
-    id: 3,
-    ruas_id: 1,
-    ordering: 2,
-    coordinates: "-6.253667,106.991748",
-    created_at: "2025-01-31T04:08:46.000000Z",
-    updated_at: "2025-01-31T04:08:46.000000Z",
-  },
-];
+interface MapProps {
+  activeRuas: ActiveRuasResponse[];
+  isLoading?: boolean;
+}
 
-const SetBoundsComponent = ({ bounds }: { bounds: L.LatLngBoundsExpression }) => {
-  const map = useMap();
+export default function Map({ activeRuas, isLoading = false }: MapProps) {
+  const allPolylinePositions: [number, number][][] = activeRuas.map((route) =>
+    route.coordinates.map((coord) => {
+      const [lat, lng] = coord.coordinates.split(",").map(Number);
+      return [lat, lng];
+    }),
+  );
 
-  useEffect(() => {
-    if (bounds) {
-      map.fitBounds(bounds);
-    }
-  }, [map, bounds]);
-
-  return null;
-};
-
-export default function Map() {
-  const polylinePositions: [number, number][] = coordinates.map((coord) => {
-    const [lat, lng] = coord.coordinates.split(",").map(Number);
-    return [lat, lng];
-  });
-
-  const bounds = L.latLngBounds(polylinePositions);
+  const bounds =
+    allPolylinePositions.length > 0
+      ? L.latLngBounds(allPolylinePositions.flat())
+      : L.latLngBounds([-2.3813555, 107.2211765], [-2.3813555, 107.2211765]);
 
   const center = bounds.getCenter();
 
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
+      {/* loading ketika fetching api */}
+      {isLoading && <LoadingOverlay />}
+
       <MapContainer center={center} zoom={13} scrollWheelZoom={false} style={{ height: "calc(100vh - 60px)" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* polyline */}
-        {polylinePositions.map((position, index) => (
-          <Marker key={coordinates[index].id} position={position}>
-            <Popup>Titik {index + 1}</Popup>
-          </Marker>
-        ))}
+        {activeRuas.map((ruas, ruasIndex) => (
+          <React.Fragment key={ruasIndex}>
+            {ruas.coordinates.map((coord, coordIndex) => {
+              const position: [number, number] = coord.coordinates.split(",").map(Number) as [number, number];
 
-        <Polyline positions={polylinePositions} />
+              return (
+                <Marker key={coordIndex} position={position}>
+                  <Popup>
+                    {ruas.ruas_name} - Titik {coordIndex + 1}
+                  </Popup>
+                </Marker>
+              );
+            })}
+
+            <Polyline
+              positions={allPolylinePositions[ruasIndex]}
+              // color={`hsl(${ruasIndex * 60}, 70%, 50%)`} // Different color for each route
+            />
+          </React.Fragment>
+        ))}
 
         <SetBoundsComponent bounds={bounds} />
       </MapContainer>
