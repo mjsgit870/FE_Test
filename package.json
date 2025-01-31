@@ -11,6 +11,7 @@
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss,md,json}'"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@mantine/core": "^7.16.2",
     "@mantine/hooks": "^7.16.2",
     "@tabler/icons-react": "^3.29.0",
@@ -24,7 +25,8 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-leaflet": "^5.0.0",
-    "react-toastify": "^11.0.3"
+    "react-toastify": "^11.0.3",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
