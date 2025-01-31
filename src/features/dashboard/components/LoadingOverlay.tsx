@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function LoadingOverlay() {
+interface LoadingOverlayProps {
+  text?: string;
+}
+
+export default function LoadingOverlay({ text }: LoadingOverlayProps) {
   return (
     <div
       style={{
@@ -16,7 +20,7 @@ export default function LoadingOverlay() {
         zIndex: 1000,
       }}
     >
-      <div>Loading...</div>
+      <div>{text || "Loading..."}</div>
     </div>
   );
 }
