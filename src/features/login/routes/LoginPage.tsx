@@ -23,7 +23,6 @@ export default function LoginPage() {
   const { login, isLoading } = useAuth();
 
   const onSubmit: SubmitHandler<LoginForm> = (data) => {
-    console.log(data);
     login(data);
   };
 
