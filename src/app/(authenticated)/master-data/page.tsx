@@ -1,5 +1,3 @@
 export default function MasterDataRuas() {
-  return (
-    <div>MasterDataRuas</div>
-  )
+  return <div>MasterDataRuas</div>;
 }

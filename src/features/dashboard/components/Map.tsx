@@ -1,6 +1,6 @@
-import { useEffect } from "react"
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet"
-import L from "leaflet"
+import { useEffect } from "react";
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
+import L from "leaflet";
 
 const coordinates = [
   {
@@ -27,29 +27,29 @@ const coordinates = [
     created_at: "2025-01-31T04:08:46.000000Z",
     updated_at: "2025-01-31T04:08:46.000000Z",
   },
-]
+];
 
 const SetBoundsComponent = ({ bounds }: { bounds: L.LatLngBoundsExpression }) => {
-  const map = useMap()
+  const map = useMap();
 
   useEffect(() => {
     if (bounds) {
-      map.fitBounds(bounds)
+      map.fitBounds(bounds);
     }
-  }, [map, bounds])
+  }, [map, bounds]);
 
-  return null
-}
+  return null;
+};
 
 export default function Map() {
   const polylinePositions: [number, number][] = coordinates.map((coord) => {
-    const [lat, lng] = coord.coordinates.split(",").map(Number)
-    return [lat, lng]
-  })
+    const [lat, lng] = coord.coordinates.split(",").map(Number);
+    return [lat, lng];
+  });
 
-  const bounds = L.latLngBounds(polylinePositions)
+  const bounds = L.latLngBounds(polylinePositions);
 
-  const center = bounds.getCenter()
+  const center = bounds.getCenter();
 
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
@@ -71,5 +71,5 @@ export default function Map() {
         <SetBoundsComponent bounds={bounds} />
       </MapContainer>
     </div>
-  )
+  );
 }

@@ -1,15 +1,10 @@
-import {
-  Icon,
-  IconChartPie,
-  IconLassoPolygon,
-  IconProps,
-} from "@tabler/icons-react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { Icon, IconChartPie, IconLassoPolygon, IconProps } from "@tabler/icons-react";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 export interface SidebarLinkProps {
-  label: string
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>
-  href: string
+  label: string;
+  icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+  href: string;
 }
 
 export const links: SidebarLinkProps[] = [
@@ -23,4 +18,4 @@ export const links: SidebarLinkProps[] = [
     icon: IconLassoPolygon,
     href: "/master-data",
   },
-]
+];
