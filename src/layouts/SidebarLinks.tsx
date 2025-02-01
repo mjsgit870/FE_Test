@@ -9,7 +9,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = ({ href, icon: Icon, labe
   const pathname = usePathname();
 
   return (
-    <Link className={classes.link} data-active={pathname === href || undefined} href={href}>
+    <Link className={classes.link} data-active={pathname.startsWith(href) || undefined} href={href}>
       <Icon className={classes.linkIcon} stroke={1.5} />
       <span>{label}</span>
     </Link>
