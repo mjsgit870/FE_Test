@@ -1,3 +1,4 @@
+import api from "@/lib/axios";
 import { handleAxiosError } from "@/utils/error-handler";
 import axios from "axios";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
@@ -28,12 +29,9 @@ export const loginService = async (credentials: LoginCredentials): Promise<Login
 };
 
 export const logoutService = async (): Promise<LogoutResponse> => {
-  try {
-    const res = await axios.post<LogoutResponse>(`${apiUrl}/logout`);
-    return res.data;
-  } catch (error) {
-    throw handleAxiosError(error);
-  }
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const res = await api.post<LogoutResponse>("/logout");
+  return res.data;
 };
 
 export const setAuthCookie = (token: string, expires_at: number) => {
