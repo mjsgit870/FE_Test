@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingOverlay from "@/components/LoadingOverlay";
-import { ActionIcon, Box, Button, Flex, Group, NativeSelect, Pagination, Table, Text } from "@mantine/core";
+import { ActionIcon, Box, Button, Flex, Group, Input, NativeSelect, Pagination, Table, Text } from "@mantine/core";
 import { IconEditCircle, IconEye, IconSquarePlus, IconTrash } from "@tabler/icons-react";
 import { useGetAllRuas } from "../api/useGetAllRuas";
 import { useGetAllUnit } from "../api/useGetAllUnit";
@@ -10,6 +10,7 @@ import { ChangeEvent, useState } from "react";
 export default function MasterDataPage() {
   const [perPage, setPerPage] = useState<string>("5");
   const [page, setPage] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const {
     data: allRuas,
@@ -21,12 +22,23 @@ export default function MasterDataPage() {
   const isPending = isRuasPending || isUnitPending;
   const isFetching = isRuasFetching || isUnitFetching;
 
-  const allRuasData = allRuas?.data.map((ruas) => ({
-    id: ruas.id,
-    ruas: ruas.ruas_name,
-    unit: allUnit?.data.find((unit) => unit.id === ruas.unit_id)?.unit,
-    status: Number(ruas.status),
-  }));
+  const allRuasData = allRuas?.data
+    .map((ruas) => ({
+      id: ruas.id,
+      ruas: ruas.ruas_name,
+      unit: allUnit?.data.find((unit) => unit.id === ruas.unit_id)?.unit,
+      status: Number(ruas.status),
+    }))
+    .filter((ruas) => {
+      if (!searchQuery) return true;
+
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        ruas.ruas.toLowerCase().includes(searchLower) ||
+        ruas.unit?.toLowerCase().includes(searchLower) ||
+        (ruas.status === 1 ? "aktif" : "tidak aktif").toLowerCase().includes(searchLower)
+      );
+    });
 
   const rows = allRuasData?.map((ruas, ruasIndex) => {
     const rowNumber = ((allRuas?.current_page ?? 1) - 1) * (allRuas?.per_page ?? 1) + (ruasIndex + 1);
@@ -54,13 +66,28 @@ export default function MasterDataPage() {
     );
   });
 
+  const FallbackRow = () => (
+    <Table.Tr>
+      <Table.Td colSpan={5} style={{ textAlign: "center" }}>
+        {isPending ? "Loading..." : "Data tidak ditemukan"}
+      </Table.Td>
+    </Table.Tr>
+  );
+
   const handlePerPageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setPerPage(e.target.value);
   };
 
   return (
     <Box>
-      <Flex justify={"flex-end"} mb="sm">
+      <Flex justify={"space-between"} mb="sm">
+        <Input
+          value={searchQuery}
+          placeholder="Cari..."
+          onChange={(e) => setSearchQuery(e.target.value)}
+          rightSection={searchQuery && <Input.ClearButton onClick={() => setSearchQuery("")} />}
+          rightSectionPointerEvents="auto"
+        />
         <Button leftSection={<IconSquarePlus size={14} />}>Tambah</Button>
       </Flex>
 
@@ -76,7 +103,7 @@ export default function MasterDataPage() {
               <Table.Th>Aksi</Table.Th>
             </Table.Tr>
           </Table.Thead>
-          <Table.Tbody>{isPending ? <LoadingRow /> : rows}</Table.Tbody>
+          <Table.Tbody>{isPending || allRuasData?.length === 0 ? <FallbackRow /> : rows}</Table.Tbody>
         </Table>
       </Table.ScrollContainer>
 
@@ -101,11 +128,3 @@ export default function MasterDataPage() {
     </Box>
   );
 }
-
-const LoadingRow = () => (
-  <Table.Tr>
-    <Table.Td colSpan={5} style={{ textAlign: "center" }}>
-      Loading...
-    </Table.Td>
-  </Table.Tr>
-);
