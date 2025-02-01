@@ -37,7 +37,6 @@ export const logoutService = async (): Promise<LogoutResponse> => {
 };
 
 export const setAuthCookie = (token: string, expires_at: number) => {
-  console.log(token, expires_at);
   setCookie("auth_token", token, {
     maxAge: expires_at,
   });

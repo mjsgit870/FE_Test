@@ -3,7 +3,6 @@ import { ActiveRuasResponse } from "../types";
 import { QueryOptions, useQuery } from "@tanstack/react-query";
 
 const getActiveRuas = async (): Promise<ActiveRuasResponse[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   const response = await api.get<{ data: ActiveRuasResponse[] }>("/ruas", {
     params: {
       show: "active_only",
