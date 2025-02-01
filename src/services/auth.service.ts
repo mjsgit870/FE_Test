@@ -1,4 +1,5 @@
-import api from "@/lib/axios";
+import { handleAxiosError } from "@/utils/error-handler";
+import axios from "axios";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 export interface LoginCredentials {
@@ -15,18 +16,28 @@ interface LogoutResponse {
   message: string;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const loginService = async (credentials: LoginCredentials): Promise<LoginResponse> => {
-  const res = await api.post<LoginResponse>("/login", credentials);
-  return res.data;
+  try {
+    const res = await axios.post<LoginResponse>(`${apiUrl}/login`, credentials);
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
 };
 
 export const logoutService = async (): Promise<LogoutResponse> => {
-  await new Promise((r) => setTimeout(r, 2000));
-  const res = await api.post<LogoutResponse>("/logout");
-  return res.data;
+  try {
+    const res = await axios.post<LogoutResponse>(`${apiUrl}/logout`);
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
 };
 
 export const setAuthCookie = (token: string, expires_at: number) => {
+  console.log(token, expires_at);
   setCookie("auth_token", token, {
     maxAge: expires_at,
   });
