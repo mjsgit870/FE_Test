@@ -17,7 +17,7 @@ export const handleAxiosError = (error: any): ApiError => {
 
     switch (status) {
       case 422:
-        return new ApiError(data.message || "Validation failed", status, data.errors);
+        return new ApiError(data.message[0] || "Validation failed", status, data.message);
       case 401:
         return new ApiError(data.message || "Unauthorized access", status);
       case 403:
