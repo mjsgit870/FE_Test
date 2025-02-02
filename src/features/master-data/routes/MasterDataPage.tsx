@@ -7,11 +7,25 @@ import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { useGetAllRuas } from "../api/useGetAllRuas";
 import { useGetAllUnit } from "../api/useGetAllUnit";
+import { useDisclosure } from "@mantine/hooks";
+import ConfirmationDialog from "@/components/ConfirmationDialog";
+import { useDeleteRuas } from "../api/useDeleteRuas";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MasterDataPage() {
   const [perPage, setPerPage] = useState<string>("5");
   const [page, setPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const [isDeleteModalOpen, { open, close }] = useDisclosure(false, {
+    onClose() {
+      setSelectedId(null);
+    },
+  });
 
   const {
     data: allRuas,
@@ -19,6 +33,8 @@ export default function MasterDataPage() {
     isFetching: isRuasFetching,
   } = useGetAllRuas({ params: { per_page: Number(perPage), page: page } });
   const { data: allUnit, isPending: isUnitPending, isFetching: isUnitFetching } = useGetAllUnit();
+
+  const deleteRuasMutation = useDeleteRuas();
 
   const isPending = isRuasPending || isUnitPending;
   const isFetching = isRuasFetching || isUnitFetching;
@@ -58,7 +74,14 @@ export default function MasterDataPage() {
             <ActionIcon variant="filled" color="cyan">
               <IconEye size={18} stroke={1.5} />
             </ActionIcon>
-            <ActionIcon variant="filled" color="red">
+            <ActionIcon
+              variant="filled"
+              color="red"
+              onClick={() => {
+                setSelectedId(ruas.id);
+                open();
+              }}
+            >
               <IconTrash size={18} stroke={1.5} />
             </ActionIcon>
           </Group>
@@ -79,8 +102,33 @@ export default function MasterDataPage() {
     setPerPage(e.target.value);
   };
 
+  const handleDeleteRuas = () => {
+    if (selectedId) {
+      deleteRuasMutation.mutate(selectedId, {
+        onError(error) {
+          close(); // tutup dialog
+          return toast.error("An error occured");
+        },
+        onSuccess(data) {
+          close(); // tutup dialog
+          queryClient.invalidateQueries({ queryKey: ["all-ruas"] });
+          queryClient.invalidateQueries({ queryKey: ["all-unit"] });
+          return toast.success("Ruas deleted successfully");
+        },
+      });
+    }
+  };
+
   return (
     <Box>
+      <ConfirmationDialog
+        opened={isDeleteModalOpen}
+        title="Delete Ruas"
+        description="Are you sure you want to delete this data?"
+        onClose={close}
+        onSubmit={handleDeleteRuas}
+      />
+
       <Flex justify={"space-between"} mb="sm">
         <Input
           value={searchQuery}
