@@ -3,9 +3,10 @@
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { ActionIcon, Box, Button, Flex, Group, Input, NativeSelect, Pagination, Table, Text } from "@mantine/core";
 import { IconEditCircle, IconEye, IconSquarePlus, IconTrash } from "@tabler/icons-react";
+import Link from "next/link";
+import { ChangeEvent, useState } from "react";
 import { useGetAllRuas } from "../api/useGetAllRuas";
 import { useGetAllUnit } from "../api/useGetAllUnit";
-import { ChangeEvent, useState } from "react";
 
 export default function MasterDataPage() {
   const [perPage, setPerPage] = useState<string>("5");
@@ -88,7 +89,9 @@ export default function MasterDataPage() {
           rightSection={searchQuery && <Input.ClearButton onClick={() => setSearchQuery("")} />}
           rightSectionPointerEvents="auto"
         />
-        <Button leftSection={<IconSquarePlus size={14} />}>Tambah</Button>
+        <Button component={Link} href={"/master-data/create"} leftSection={<IconSquarePlus size={14} />}>
+          Tambah
+        </Button>
       </Flex>
 
       <Table.ScrollContainer minWidth="100%" style={{ position: "relative" }}>
