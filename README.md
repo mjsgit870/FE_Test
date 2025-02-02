@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Setup Guide
 
-## Getting Started
+Created by: [Muhammad Julian Saputra](https://www.linkedin.com/in/muhammad-julian-saputra-38313a159/)
 
-First, run the development server:
+This document will guide you through the steps needed to run this project locally.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Make sure you have the following installed on your system:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js
+- Yarn (recommended) or NPM
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation Steps
 
-## Learn More
+1. Install dependencies (we recommend using Yarn for better performance and consistency):
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   yarn
+   # or yarn install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   Alternatively, if you must use npm:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+2. Environment Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - Duplicate `.env.example` file and rename it to `.env`
+   - Open `.env` file and update the `NEXT_PUBLIC_API_URL` with your API URL
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```env
+   NEXT_PUBLIC_API_URL=your_api_url_here
+   ```
+
+3. Start Development Server
+   ```bash
+   yarn dev
+   # or if using npm:
+   npm run dev
+   ```
+
+## Notes
+
+- We recommend using Yarn as the package manager for this project
+- Make sure your API server is running before starting the development server
+- The application will be available at `http://localhost:3000` by default
+
+## Need Help?
+
+If you encounter any issues during setup, please check:
+
+- Your Node.js version is compatible
+- All dependencies were installed correctly using Yarn
+- The `.env` file is properly configured
