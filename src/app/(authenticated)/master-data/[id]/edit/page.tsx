@@ -12,7 +12,7 @@ const EditRuasPage = dynamic(() => import("@/features/master-data/routes/EditRua
 export default function EditRuas() {
   const params = useParams<{ id: string }>();
 
-  const { data: ruas, isPending } = useGetRuas({ id: params.id });
+  const { data: ruas, isPending, isFetching } = useGetRuas({ id: params.id });
 
   return (
     <Container p={0}>
@@ -20,7 +20,7 @@ export default function EditRuas() {
         Back
       </Button>
 
-      {!ruas || isPending ? <Text>Loading...</Text> : <EditRuasPage ruasData={ruas} />}
+      {ruas && !isPending && !isFetching ? <EditRuasPage ruasData={ruas} /> : <Text>Loading...</Text>}
     </Container>
   );
 }
