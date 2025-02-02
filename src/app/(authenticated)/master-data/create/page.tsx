@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Container } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
