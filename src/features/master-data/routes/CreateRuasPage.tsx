@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import CoordinateTable from "../components/CoordinateTable";
 
-const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Loading...</div> });
+const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Sedang load MAP...</div> });
 
 export default function CreateRuasPage() {
   const router = useRouter();
@@ -61,7 +61,6 @@ export default function CreateRuasPage() {
   };
 
   const onSubmit: SubmitHandler<CreateForm> = (data) => {
-    console.log(data);
     const formattedData: CreateRuasPayload = {
       ...data,
       long: data.long.toString(),
@@ -95,10 +94,14 @@ export default function CreateRuasPage() {
         <Alert variant="light" title="Tutorial" mb="sm" icon={<IconInfoCircle />}>
           <List>
             <List.Item>
-              Jika ingin menambah titik koordinat, klik tombol "+" di pojok kanan bawah peta. Lalu klik pada peta untuk
-              menambah titik, lalu klik tombol lagi untuk menonaktifkan-nya.
+              <small>
+                Jika ingin menambah titik koordinat, klik tombol "+" di pojok kanan bawah peta. Lalu klik pada peta
+                untuk menambah titik, lalu klik tombol lagi untuk menonaktifkan-nya.
+              </small>
             </List.Item>
-            <List.Item>Anda juga dapat menggeser titik koordinat dengan menahan titik/mark.</List.Item>
+            <List.Item>
+              <small>Anda juga dapat menggeser titik koordinat dengan menahan titik/mark.</small>
+            </List.Item>
           </List>
         </Alert>
 
