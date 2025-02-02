@@ -1,6 +1,7 @@
-import { Grid, Group, Input, NumberInput, Switch } from "@mantine/core";
+import { Grid, Group, Input, NumberInput, Select, Switch } from "@mantine/core";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { type CreateRuasForm } from "../types/form";
+import { useGetAllUnit } from "../api/useGetAllUnit";
 
 interface CreateRuasFormProps {
   control: Control<CreateRuasForm>;
@@ -8,8 +9,32 @@ interface CreateRuasFormProps {
 }
 
 export default function CreateRuasForm({ control, errors }: CreateRuasFormProps) {
+  const { data: allUnit, isPending } = useGetAllUnit();
+
+  const unitSelectItems = allUnit?.data.map((unit) => ({
+    value: unit.id.toString(),
+    label: unit.unit,
+  }));
+
   return (
     <Grid align="flex-end" mb="sm">
+      <Grid.Col span={12}>
+        <Controller
+          name="unit_id"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Unit"
+              placeholder="Pilih unit..."
+              data={unitSelectItems}
+              searchable
+              error={errors?.unit_id?.message}
+              disabled={isPending}
+              {...field}
+            />
+          )}
+        />
+      </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6 }}>
         <Controller
           name="ruas_name"

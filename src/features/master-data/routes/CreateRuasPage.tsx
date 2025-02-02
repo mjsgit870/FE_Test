@@ -1,18 +1,25 @@
 "use client";
 
-import { Alert, Box, Button, Card, Flex, Title } from "@mantine/core";
+import { Alert, Box, Button, Card, Flex, List, Title } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import CreateRuasForm from "../components/CreateRuasForm";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateRuasForm as CreateForm } from "../types/form";
+import { CreateRuasForm as CreateForm, CreateRuasPayload } from "../types/form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createRuasFormSchema } from "../schemas";
 import { Coordinate } from "../types/map";
+import { useAddRuas } from "../api/useAddRuas";
+import { ApiError } from "@/utils/error-handler";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import CoordinateTable from "../components/CoordinateTable";
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Loading...</div> });
 
 export default function CreateRuasPage() {
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
@@ -23,7 +30,7 @@ export default function CreateRuasPage() {
   } = useForm<CreateForm>({
     resolver: zodResolver(createRuasFormSchema),
     defaultValues: {
-      // unit_id: undefined,
+      unit_id: undefined,
       ruas_name: "",
       long: 0,
       km_awal: 0,
@@ -34,6 +41,8 @@ export default function CreateRuasPage() {
       coordinates: [],
     },
   });
+
+  const addRuasMutation = useAddRuas();
 
   const handleMapClick = (coord: Coordinate) => {
     const currentCoordinates = getValues("coordinates");
@@ -46,8 +55,34 @@ export default function CreateRuasPage() {
     setValue("coordinates", updatedCoordinates);
   };
 
+  const handleDeleteCoord = (index: number) => {
+    const updatedCoordinates = getValues("coordinates").filter((_, i) => i !== index);
+    setValue("coordinates", updatedCoordinates);
+  };
+
   const onSubmit: SubmitHandler<CreateForm> = (data) => {
     console.log(data);
+    const formattedData: CreateRuasPayload = {
+      ...data,
+      long: data.long.toString(),
+      km_awal: `${data.km_awal}+${String(data.m_awal).padStart(3, "0")}`,
+      km_akhir: `${data.km_akhir}+${String(data.m_akhir).padStart(3, "0")}`,
+      coordinates: data.coordinates.map((coord) => `${coord[0]},${coord[1]}`),
+    };
+
+    addRuasMutation.mutate(formattedData, {
+      onError(error) {
+        if (error instanceof ApiError && error.status === 422) {
+          return toast.error(error?.errors?.[0] ?? "An unknown error occurred");
+        }
+
+        return toast.error(error.message);
+      },
+      onSuccess() {
+        router.push("/master-data");
+        return toast.success("Ruas created successfully");
+      },
+    });
   };
 
   return (
@@ -58,15 +93,27 @@ export default function CreateRuasPage() {
 
       <Box mb="sm">
         <Alert variant="light" title="Tutorial" mb="sm" icon={<IconInfoCircle />}>
-          Jika ingin menambah titik koordinat, klik tombol "+" di pojok kanan bawah peta. Lalu klik pada peta untuk
-          menambah titik.
+          <List>
+            <List.Item>
+              Jika ingin menambah titik koordinat, klik tombol "+" di pojok kanan bawah peta. Lalu klik pada peta untuk
+              menambah titik, lalu klik tombol lagi untuk menonaktifkan-nya.
+            </List.Item>
+            <List.Item>Anda juga dapat menggeser titik koordinat dengan menahan titik/mark.</List.Item>
+          </List>
         </Alert>
 
-        <Map coordinates={watch("coordinates")} onMapClick={handleMapClick} onMarkerDrag={handleMarkerDrag} />
+        <Box mb="sm">
+          <Map coordinates={watch("coordinates")} onMapClick={handleMapClick} onMarkerDrag={handleMarkerDrag} />
+        </Box>
+
+        <CoordinateTable coordinates={watch("coordinates")} onDelete={handleDeleteCoord} />
       </Box>
 
       <Flex justify="flex-end">
-        <Button onClick={handleSubmit(onSubmit)} disabled={!isValid}>
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isValid || watch("coordinates").length < 2 || addRuasMutation.isPending}
+        >
           Create
         </Button>
       </Flex>

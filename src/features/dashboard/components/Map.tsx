@@ -30,7 +30,7 @@ export default function Map({ activeRuas, isLoading = false }: MapProps) {
       {/* loading ketika fetching api */}
       {isLoading && <LoadingOverlay text="Mencari data ruas..." />}
 
-      <MapContainer center={center} zoom={13} scrollWheelZoom={false} style={{ height: "calc(100vh - 60px)" }}>
+      <MapContainer center={center} zoom={13} style={{ height: "calc(100vh - 60px)" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -52,7 +52,6 @@ export default function Map({ activeRuas, isLoading = false }: MapProps) {
 
             <Polyline
               positions={allPolylinePositions[ruasIndex]}
-              // color={`hsl(${ruasIndex * 60}, 70%, 50%)`} // Different color for each route
               weight={5}
               eventHandlers={{
                 click: (e) => {

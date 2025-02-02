@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createRuasFormSchema = z.object({
-  // unit_id: z.number().min(1, "Unit is required"),
+  unit_id: z.string().min(1, "Unit is required"),
   ruas_name: z.string().min(1, "Nama Ruas is required"),
   long: z.number().min(1, "Panjang is required"),
   km_awal: z.number().min(1, "KM Awal is required"),
