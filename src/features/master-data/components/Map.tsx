@@ -38,7 +38,7 @@ const MapClickHandler: React.FC<MapClickHandlerProps> = ({ onMapClick, isAddMode
   return null;
 };
 
-export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit, isReadonly }: MapProps) {
+export default function Map({ coordinates, onMapClick, onMarkerDrag, isCreate, isEdit, isReadonly }: MapProps) {
   const [isAddMode, setIsAddMode] = useState(false);
 
   const boundsSet = useRef(false); // prevent auto bounds while add coordinate in edit mode
@@ -106,11 +106,9 @@ export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit, isR
         </Box>
       )}
 
-      {isEdit ? (
-        coordinates.length > 0 && !boundsSet.current && <SetBoundsComponent bounds={bounds} />
-      ) : (
-        <SetBoundsComponent bounds={bounds} />
-      )}
+      {isEdit
+        ? coordinates.length > 0 && !boundsSet.current && <SetBoundsComponent bounds={bounds} />
+        : !isCreate && <SetBoundsComponent bounds={bounds} />}
     </MapContainer>
   );
 }
