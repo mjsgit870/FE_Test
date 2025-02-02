@@ -1,11 +1,13 @@
 "use client";
 
-import { LatLngTuple } from "leaflet";
-import React, { useCallback, useEffect, useState } from "react";
+import L, { LatLngTuple } from "leaflet";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { Coordinate, MapProps } from "../types/map";
 import { ActionIcon, Box, Tooltip } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import SetBoundsComponent from "@/components/SetBoundsComponent";
+// import SetBoundsComponent from "./SetBoundsComponent";
 
 const position: LatLngTuple = [-2.3813555, 107.2211765];
 
@@ -37,16 +39,26 @@ const MapClickHandler: React.FC<MapClickHandlerProps> = ({ onMapClick, isAddMode
   return null;
 };
 
-export default function Map({ coordinates, onMapClick, onMarkerDrag }: MapProps) {
+export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit }: MapProps) {
   const [isAddMode, setIsAddMode] = useState(false);
+
+  const boundsSet = useRef(false);
 
   const handleToggleAddMode = useCallback((e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent the click from bubbling to the map
     setIsAddMode((prev) => !prev);
   }, []);
 
+  const bounds = coordinates.length > 0 ? new L.LatLngBounds(coordinates) : new L.LatLngBounds([position]);
+
+  const center = bounds.getCenter();
+
+  useEffect(() => {
+    boundsSet.current = true;
+  }, []);
+
   return (
-    <MapContainer center={position} zoom={6} style={{ height: 350 }} attributionControl={false}>
+    <MapContainer center={center} zoom={6} style={{ height: 350 }} attributionControl={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -92,6 +104,8 @@ export default function Map({ coordinates, onMapClick, onMarkerDrag }: MapProps)
           </ActionIcon>
         </Tooltip>
       </Box>
+
+      {isEdit && coordinates.length > 0 && !boundsSet.current && <SetBoundsComponent bounds={bounds} />}
     </MapContainer>
   );
 }

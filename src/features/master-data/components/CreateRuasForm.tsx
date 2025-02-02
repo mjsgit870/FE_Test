@@ -106,7 +106,13 @@ export default function CreateRuasForm({ control, errors }: CreateRuasFormProps)
         <Controller
           name="status"
           control={control}
-          render={({ field }) => <Switch label="Aktif / Tidak Aktif" checked={field.value === "1"} />}
+          render={({ field }) => (
+            <Switch
+              label="Aktif / Tidak Aktif"
+              checked={field.value === "1"}
+              onChange={(e) => field.onChange(e.target.checked ? "1" : "0")}
+            />
+          )}
         />
       </Grid.Col>
     </Grid>

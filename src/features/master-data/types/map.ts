@@ -4,6 +4,7 @@ export interface MapProps {
   coordinates: Coordinate[];
   onMapClick: (coord: Coordinate) => void;
   onMarkerDrag?: (index: number, newPosition: Coordinate) => void;
+  isEdit?: boolean;
 }
 
 export interface CoordinateFormProps {

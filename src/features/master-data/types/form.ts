@@ -11,6 +11,15 @@ export interface CreateRuasPayload
   coordinates: string[];
 }
 
+export interface UpdateRuasPayload
+  extends Omit<CreateRuasForm, "long" | "km_awal" | "m_awal" | "km_akhir" | "m_akhir" | "coordinates"> {
+  _method: string;
+  long: string;
+  km_awal: string;
+  km_akhir: string;
+  coordinates: string[];
+}
+
 export interface CreateRuasResponse {
   status: boolean;
   message: string;
