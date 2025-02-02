@@ -10,6 +10,17 @@ export function middleware(request: NextRequest) {
 
   const isAuthenticatedRoute = authenticatedRoutes.some((route) => pathname.startsWith(route));
   const isLoginRoute = pathname.startsWith("/login");
+  const isRootRoute = pathname === "/";
+
+  // if on root route and already authenticated, redirect to dashboard
+  if (isRootRoute && authToken) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // If on root route without token, redirect to login
+  if (isRootRoute && !authToken) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   // If on login route and already authenticated, redirect to dashboard
   if (isLoginRoute && authToken) {
@@ -25,5 +36,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/master-data/:path*", "/login"],
+  matcher: ["/", "/dashboard/:path*", "/master-data/:path*", "/login"],
 };
