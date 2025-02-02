@@ -52,7 +52,7 @@ export default function MasterDataPage() {
         <Table.Td>{ruas.status === 1 ? "Aktif" : "Tidak Aktif"}</Table.Td>
         <Table.Td>
           <Group style={{ gap: 5 }}>
-            <ActionIcon variant="filled">
+            <ActionIcon component={Link} href={`/master-data/${ruas.id}/edit`} variant="filled">
               <IconEditCircle size={18} stroke={1.5} />
             </ActionIcon>
             <ActionIcon variant="filled" color="cyan">
