@@ -13,7 +13,7 @@ type ConfigProps = {
 
 export const useUpdateRuas = ({ config }: ConfigProps = {}) => {
   return useMutation({
-    mutationKey: ["add-ruas"],
+    mutationKey: ["update-ruas"],
     mutationFn: updateRuas,
     ...config,
   });
