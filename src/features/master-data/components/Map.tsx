@@ -7,7 +7,6 @@ import { Coordinate, MapProps } from "../types/map";
 import { ActionIcon, Box, Tooltip } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import SetBoundsComponent from "@/components/SetBoundsComponent";
-// import SetBoundsComponent from "./SetBoundsComponent";
 
 const position: LatLngTuple = [-2.3813555, 107.2211765];
 
@@ -39,10 +38,10 @@ const MapClickHandler: React.FC<MapClickHandlerProps> = ({ onMapClick, isAddMode
   return null;
 };
 
-export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit }: MapProps) {
+export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit, isReadonly }: MapProps) {
   const [isAddMode, setIsAddMode] = useState(false);
 
-  const boundsSet = useRef(false);
+  const boundsSet = useRef(false); // prevent auto bounds while add coordinate in edit mode
 
   const handleToggleAddMode = useCallback((e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent the click from bubbling to the map
@@ -85,27 +84,33 @@ export default function Map({ coordinates, onMapClick, onMarkerDrag, isEdit }: M
 
       {coordinates && <Polyline positions={coordinates} />}
 
-      <Box
-        style={{
-          position: "absolute",
-          right: 10,
-          bottom: 10,
-          zIndex: 1000,
-        }}
-      >
-        <Tooltip
-          position="left"
-          withArrow
-          label={isAddMode ? "Mode menambah titik aktif" : "Tambah titik"}
-          zIndex={1000}
+      {!isReadonly && (
+        <Box
+          style={{
+            position: "absolute",
+            right: 10,
+            bottom: 10,
+            zIndex: 1000,
+          }}
         >
-          <ActionIcon size="lg" color={isAddMode ? "green" : "gray"} onClick={handleToggleAddMode}>
-            <IconPlus />
-          </ActionIcon>
-        </Tooltip>
-      </Box>
+          <Tooltip
+            position="left"
+            withArrow
+            label={isAddMode ? "Mode menambah titik aktif" : "Tambah titik"}
+            zIndex={1000}
+          >
+            <ActionIcon size="lg" color={isAddMode ? "green" : "gray"} onClick={handleToggleAddMode}>
+              <IconPlus />
+            </ActionIcon>
+          </Tooltip>
+        </Box>
+      )}
 
-      {isEdit && coordinates.length > 0 && !boundsSet.current && <SetBoundsComponent bounds={bounds} />}
+      {isEdit ? (
+        coordinates.length > 0 && !boundsSet.current && <SetBoundsComponent bounds={bounds} />
+      ) : (
+        <SetBoundsComponent bounds={bounds} />
+      )}
     </MapContainer>
   );
 }

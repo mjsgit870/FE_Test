@@ -2,9 +2,10 @@ export type Coordinate = [number, number]; // [latitude, longitude]
 
 export interface MapProps {
   coordinates: Coordinate[];
-  onMapClick: (coord: Coordinate) => void;
+  onMapClick?: (coord: Coordinate) => void;
   onMarkerDrag?: (index: number, newPosition: Coordinate) => void;
   isEdit?: boolean;
+  isReadonly?: boolean;
 }
 
 export interface CoordinateFormProps {

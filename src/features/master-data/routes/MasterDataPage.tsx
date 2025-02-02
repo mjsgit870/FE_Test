@@ -71,7 +71,7 @@ export default function MasterDataPage() {
             <ActionIcon component={Link} href={`/master-data/${ruas.id}/edit`} variant="filled">
               <IconEditCircle size={18} stroke={1.5} />
             </ActionIcon>
-            <ActionIcon variant="filled" color="cyan">
+            <ActionIcon component={Link} href={`/master-data/${ruas.id}/view`} variant="filled" color="cyan">
               <IconEye size={18} stroke={1.5} />
             </ActionIcon>
             <ActionIcon
