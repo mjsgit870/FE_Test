@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Box, Button, Card, Flex, List, Title } from "@mantine/core";
+import { Alert, Box, Button, Card, Flex, List, Skeleton, Title } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import CreateRuasForm from "../components/CreateRuasForm";
@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import CoordinateTable from "../components/CoordinateTable";
 
-const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Sedang load MAP...</div> });
+const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <Skeleton height={350} /> });
 
 export default function CreateRuasPage() {
   const router = useRouter();
@@ -106,7 +106,12 @@ export default function CreateRuasPage() {
         </Alert>
 
         <Box mb="sm">
-          <Map coordinates={watch("coordinates")} onMapClick={handleMapClick} onMarkerDrag={handleMarkerDrag} />
+          <Map
+            coordinates={watch("coordinates")}
+            isCreate
+            onMapClick={handleMapClick}
+            onMarkerDrag={handleMarkerDrag}
+          />
         </Box>
 
         <CoordinateTable coordinates={watch("coordinates")} onDelete={handleDeleteCoord} />

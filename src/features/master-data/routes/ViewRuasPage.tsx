@@ -1,13 +1,13 @@
 "use client";
 
-import { Badge, Box, Card, Divider, Flex, Grid, Text, Title } from "@mantine/core";
+import { Badge, Box, Card, Divider, Flex, Grid, Skeleton, Text, Title } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { Coordinate } from "../types/map";
 import { GetRuasResponse } from "../types/ruas";
 import CoordinateTable from "../components/CoordinateTable";
 import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
 
-const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Sedang load MAP...</div> });
+const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <Skeleton height={350} /> });
 
 export default function ViewRuasPage({ ruasData }: { ruasData: GetRuasResponse }) {
   const km_awal = ruasData?.data.km_awal.split("+");

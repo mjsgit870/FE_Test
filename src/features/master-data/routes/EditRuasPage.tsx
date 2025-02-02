@@ -2,7 +2,7 @@
 
 import { ApiError } from "@/utils/error-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, Box, Button, Card, Flex, List, Title } from "@mantine/core";
+import { Alert, Box, Button, Card, Flex, List, Skeleton, Title } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import { CreateRuasForm as CreateForm, UpdateRuasPayload } from "../types/form";
 import { Coordinate } from "../types/map";
 import { GetRuasResponse } from "../types/ruas";
 
-const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <div>Sedang load MAP...</div> });
+const Map = dynamic(() => import("../components/Map"), { ssr: false, loading: () => <Skeleton height={350} /> });
 
 export default function EditRuasPage({ ruasData }: { ruasData: GetRuasResponse }) {
   const router = useRouter();
